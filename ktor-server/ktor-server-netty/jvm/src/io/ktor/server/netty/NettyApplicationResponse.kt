@@ -8,11 +8,9 @@ import io.ktor.http.*
 import io.ktor.http.HttpHeaders
 import io.ktor.http.content.*
 import io.ktor.server.engine.*
-import io.ktor.util.*
 import io.ktor.utils.io.*
 import io.netty.channel.*
 import io.netty.handler.codec.http.*
-import kotlinx.coroutines.*
 import kotlin.coroutines.*
 
 public abstract class NettyApplicationResponse(
@@ -22,7 +20,9 @@ public abstract class NettyApplicationResponse(
     protected val userContext: CoroutineContext
 ) : BaseApplicationResponse(call) {
 
-    public val responseMessage: CompletableDeferred<Any> = CompletableDeferred()
+    internal val responseFlag: ChannelPromise = context.newPromise()
+
+    public lateinit var responseMessage: Any
 
     @Volatile
     protected var responseMessageSent: Boolean = false
@@ -47,15 +47,16 @@ public abstract class NettyApplicationResponse(
         // because it should've been set by commitHeaders earlier
         val chunked = headers[HttpHeaders.TransferEncoding] == "chunked"
 
-        if (!responseMessageSent) {
-            val message = responseMessage(chunked, bytes)
-            responseChannel = when (message) {
-                is LastHttpContent -> ByteReadChannel.Empty
-                else -> ByteReadChannel(bytes)
-            }
-            responseMessage.complete(message)
-            responseMessageSent = true
+        if (responseMessageSent) return
+
+        val message = responseMessage(chunked, bytes)
+        responseChannel = when (message) {
+            is LastHttpContent -> ByteReadChannel.Empty
+            else -> ByteReadChannel(bytes)
         }
+        responseMessage = message
+        responseFlag.setSuccess()
+        responseMessageSent = true
     }
 
     override suspend fun responseChannel(): ByteWriteChannel {
@@ -72,20 +73,23 @@ public abstract class NettyApplicationResponse(
     protected abstract fun responseMessage(chunked: Boolean, last: Boolean): Any
     protected open fun responseMessage(chunked: Boolean, data: ByteArray): Any = responseMessage(chunked, true)
 
+    internal open fun trailerMessage(): Any? {
+        return null
+    }
+
     internal fun sendResponse(chunked: Boolean = true, content: ByteReadChannel) {
         if (responseMessageSent) return
 
         responseChannel = content
-        responseMessage.complete(
-            when {
-                content.isClosedForRead -> {
-                    responseMessage(chunked = false, data = EmptyByteArray)
-                }
-                else -> {
-                    responseMessage(chunked, last = false)
-                }
+        responseMessage = when {
+            content.isClosedForRead -> {
+                responseMessage(chunked = false, data = EmptyByteArray)
             }
-        )
+            else -> {
+                responseMessage(chunked, last = false)
+            }
+        }
+        responseFlag.setSuccess()
         responseMessageSent = true
     }
 
@@ -108,7 +112,7 @@ public abstract class NettyApplicationResponse(
     public fun cancel() {
         if (!responseMessageSent) {
             responseChannel = ByteReadChannel.Empty
-            responseMessage.cancel()
+            responseFlag.setFailure(java.util.concurrent.CancellationException())
             responseMessageSent = true
         }
     }
