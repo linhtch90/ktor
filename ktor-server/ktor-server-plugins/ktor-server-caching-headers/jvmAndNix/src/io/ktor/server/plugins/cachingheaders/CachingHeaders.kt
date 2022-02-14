@@ -7,6 +7,7 @@ package io.ktor.server.plugins.cachingheaders
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
+import io.ktor.server.application.hooks.*
 
 /**
  * A configuration for the [CachingHeaders] plugin
@@ -40,9 +41,9 @@ public val CachingHeaders: RouteScopedPlugin<CachingHeadersConfig, PluginInstanc
         return optionsProviders.mapNotNullTo(ArrayList(optionsProviders.size)) { it(content) }
     }
 
-    onCallRespond.afterTransform { call, message ->
-        val options = optionsFor(message)
-        if (options.isEmpty()) return@afterTransform
+    on(ResponseBodyReady) { call, content ->
+        val options = optionsFor(content)
+        if (options.isEmpty()) return@on
 
         val headers = Headers.build {
             options.mapNotNull { it.cacheControl }

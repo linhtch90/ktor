@@ -6,6 +6,7 @@ package io.ktor.server.plugins.forwardedheaders
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.application.hooks.*
 import io.ktor.server.plugins.*
 import io.ktor.util.*
 
@@ -194,7 +195,7 @@ public data class XForwardedHeaderValues(
 public val XForwardedHeaders: ApplicationPlugin<Application, XForwardedHeadersConfig, PluginInstance> =
     createApplicationPlugin("XForwardedHeaders", createConfiguration = { XForwardedHeadersConfig() }) {
 
-        onCall { call ->
+        on(CallSetup) { call ->
             val strategy = pluginConfig.xForwardedHeadersHandler
             val headers = XForwardedHeaderValues(
                 protoHeader = pluginConfig.protoHeaders.firstNotNullOfOrNull { call.request.headers[it] },
