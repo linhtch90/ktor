@@ -164,3 +164,33 @@ public final class io/ktor/server/netty/NettyChannelInitializer : io/netty/chann
 public final class io/ktor/server/netty/NettyChannelInitializer$Companion {
 }
 
+public abstract class io/ktor/server/netty/cio/WriterEncapsulation {
+	public abstract fun endOfStream (Z)Ljava/lang/Object;
+	public fun getRequiresContextClose ()Z
+	public abstract fun transform (Lio/netty/buffer/ByteBuf;Z)Ljava/lang/Object;
+	public abstract fun upgrade (Lio/netty/channel/ChannelHandlerContext;)V
+}
+
+public final class io/ktor/server/netty/cio/WriterEncapsulation$Http1 : io/ktor/server/netty/cio/WriterEncapsulation {
+	public static final field INSTANCE Lio/ktor/server/netty/cio/WriterEncapsulation$Http1;
+	public fun endOfStream (Z)Ljava/lang/Object;
+	public fun transform (Lio/netty/buffer/ByteBuf;Z)Ljava/lang/Object;
+	public fun upgrade (Lio/netty/channel/ChannelHandlerContext;)V
+}
+
+public final class io/ktor/server/netty/cio/WriterEncapsulation$Http2 : io/ktor/server/netty/cio/WriterEncapsulation {
+	public static final field INSTANCE Lio/ktor/server/netty/cio/WriterEncapsulation$Http2;
+	public fun endOfStream (Z)Ljava/lang/Object;
+	public fun getRequiresContextClose ()Z
+	public fun transform (Lio/netty/buffer/ByteBuf;Z)Ljava/lang/Object;
+	public fun upgrade (Lio/netty/channel/ChannelHandlerContext;)V
+}
+
+public final class io/ktor/server/netty/cio/WriterEncapsulation$Raw : io/ktor/server/netty/cio/WriterEncapsulation {
+	public static final field INSTANCE Lio/ktor/server/netty/cio/WriterEncapsulation$Raw;
+	public fun endOfStream (Z)Ljava/lang/Object;
+	public fun getRequiresContextClose ()Z
+	public fun transform (Lio/netty/buffer/ByteBuf;Z)Ljava/lang/Object;
+	public fun upgrade (Lio/netty/channel/ChannelHandlerContext;)V
+}
+
