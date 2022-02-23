@@ -9,6 +9,8 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 
+private const val ESTIMATED_ROUTING_DEPTH: Int = 16
+
 /**
  * Represents a result of routing resolution.
  *
@@ -129,7 +131,8 @@ public class RoutingResolveContext(
         val successResults = mutableListOf<List<RoutingResolveResult.Success>>()
 
         val rootResolveResult = RoutingResolveResult.Success(root, rootEvaluation.parameters, rootEvaluation.quality)
-        val rootTrait = listOf(rootResolveResult)
+        val rootTrait = ArrayList<RoutingResolveResult.Success>(ESTIMATED_ROUTING_DEPTH)
+        rootTrait.add(rootResolveResult)
 
         trace?.begin(root, 0)
         val failedEvaluation = resolveStep(
@@ -151,7 +154,7 @@ public class RoutingResolveContext(
     private fun resolveStep(
         entry: Route,
         successResults: MutableList<List<RoutingResolveResult.Success>>,
-        trait: List<RoutingResolveResult.Success>,
+        currentTrait: MutableList<RoutingResolveResult.Success>,
         segmentIndex: Int
     ): RouteSelectorEvaluation.Failure? {
         var failedEvaluation: RouteSelectorEvaluation.Failure? = RouteSelectorEvaluation.FailedPath
@@ -166,7 +169,7 @@ public class RoutingResolveContext(
             return RouteSelectorEvaluation.FailedPath
         }
         if (entry.handlers.isNotEmpty() && segmentIndex == segments.size) {
-            successResults.add(trait)
+            successResults.add(currentTrait)
             failedEvaluation = null
         }
 
@@ -198,7 +201,9 @@ public class RoutingResolveContext(
             val result = RoutingResolveResult.Success(child, childEvaluation.parameters, childEvaluation.quality)
             val newIndex = segmentIndex + childEvaluation.segmentIncrement
             trace?.begin(child, newIndex)
-            val failedSubtreeEvaluation = resolveStep(child, successResults, trait + result, newIndex)
+            currentTrait.add(result)
+            val failedSubtreeEvaluation = resolveStep(child, successResults, currentTrait, newIndex)
+            currentTrait.removeLast()
             trace?.finish(child, newIndex, result)
 
             if (failedSubtreeEvaluation == null && bestSucceedChildQuality < childEvaluation.quality) {
