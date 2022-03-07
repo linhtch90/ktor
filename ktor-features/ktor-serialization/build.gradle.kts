@@ -11,7 +11,7 @@ plugins {
 kotlin.sourceSets {
     val jvmMain by getting {
         dependencies {
-            api("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
+            api(libs.kotlinx.serialization.json)
         }
     }
 }

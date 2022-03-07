@@ -7,7 +7,7 @@ kotlin.sourceSets {
             api(project(":ktor-server:ktor-server-host-common"))
             api(project(":ktor-http:ktor-http-cio"))
 
-            compileOnly("javax.servlet:javax.servlet-api:4.0.1")
+            compileOnly(libs.javax.servlet)
         }
     }
 
@@ -15,7 +15,7 @@ kotlin.sourceSets {
         dependencies {
             api(project(":ktor-server:ktor-server-core", configuration = "testOutput"))
             implementation(libs.mockk)
-            implementation("javax.servlet:javax.servlet-api:4.0.1")
+            implementation(libs.javax.servlet)
         }
     }
 }
