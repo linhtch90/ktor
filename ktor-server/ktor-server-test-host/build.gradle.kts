@@ -1,7 +1,6 @@
 description = ""
 
 val jetty_alpn_boot_version: String? by extra
-val logback_version: String by extra
 val jetty_version: String by extra
 val coroutines_version: String by extra
 val junit_version: String by extra
@@ -22,7 +21,7 @@ kotlin.sourceSets {
             // so shouldn"t increase the size of the final artifact.
             api(project(":ktor-features:ktor-websockets"))
 
-            api("ch.qos.logback:logback-classic:$logback_version")
+            api(libs.logback.classic)
             api("org.eclipse.jetty.http2:http2-client:$jetty_version")
             api("org.eclipse.jetty:jetty-client:$jetty_version")
             api("org.eclipse.jetty.http2:http2-http-client-transport:$jetty_version")

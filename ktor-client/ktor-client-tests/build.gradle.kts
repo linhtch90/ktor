@@ -10,7 +10,6 @@ description = "Common tests for client"
 
 val junit_version: String by project.extra
 val kotlin_version: String by project.extra
-val logback_version: String by project.extra
 val coroutines_version: String by project
 
 val ideaActive: Boolean by project.extra
@@ -74,10 +73,10 @@ kotlin.sourceSets {
             api(project(":ktor-features:ktor-auth"))
             api(project(":ktor-features:ktor-websockets"))
             api(project(":ktor-features:ktor-serialization"))
-            api("ch.qos.logback:logback-classic:$logback_version")
-            api("junit:junit:$junit_version")
-            api("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines_version")
+            api(libs.logback.classic)
+            api(libs.junit)
+            api(libs.kotlin.test.junit)
+            api(libs.kotlinx.coroutines.debug)
         }
     }
 

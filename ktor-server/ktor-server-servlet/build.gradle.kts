@@ -14,7 +14,7 @@ kotlin.sourceSets {
     val jvmTest by getting {
         dependencies {
             api(project(":ktor-server:ktor-server-core", configuration = "testOutput"))
-            implementation("io.mockk:mockk:$mockk_version")
+            implementation(libs.mockk)
             implementation("javax.servlet:javax.servlet-api:4.0.1")
         }
     }
