@@ -138,6 +138,7 @@ apply(from = "gradle/compatibility.gradle")
 
 plugins {
     id("org.jetbrains.dokka") version "1.4.32"
+    id("org.sonatype.gradle.plugins.scan") version "2.2.2"
 }
 
 allprojects {
@@ -215,10 +216,6 @@ if (project.hasProperty("enableCodeStyle")) {
 
 println("Using Kotlin compiler version: ${org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION}")
 filterSnapshotTests()
-
-if (project.hasProperty("enable-coverage")) {
-    apply(from = "gradle/jacoco.gradle")
-}
 
 subprojects {
     plugins.apply("org.jetbrains.dokka")
