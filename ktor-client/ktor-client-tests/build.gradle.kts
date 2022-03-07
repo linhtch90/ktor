@@ -8,10 +8,6 @@ import java.net.*
 
 description = "Common tests for client"
 
-val junit_version: String by project.extra
-val kotlin_version: String by project.extra
-val coroutines_version: String by project
-
 val ideaActive: Boolean by project.extra
 
 plugins {

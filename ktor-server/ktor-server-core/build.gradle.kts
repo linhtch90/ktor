@@ -1,6 +1,5 @@
 description = ""
 
-val typesafe_config_version: String by extra
 val kotlin_version: String by extra
 val mockk_version: String by extra
 

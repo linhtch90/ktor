@@ -1,8 +1,5 @@
 description = "Ktor http client"
 
-val ideaActive: Boolean by project
-val coroutines_version: String by project
-
 val node_fetch_version: String by project
 val abort_controller_version: String by project
 val ws_version: String by project
@@ -32,7 +29,7 @@ kotlin.sourceSets {
 
     val jvmTest by getting {
         dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines_version")
+            implementation(libs.kotlinx.coroutines.debug)
         }
     }
 }

@@ -136,15 +136,12 @@ apply(from = "gradle/compatibility.gradle")
 
 plugins {
     id("org.jetbrains.dokka") version "1.4.32"
-    id("org.sonatype.gradle.plugins.scan") version "2.2.2"
 }
 
 allprojects {
     group = "io.ktor"
     version = configuredVersion
     extra["hostManager"] = HostManager()
-
-    setupTrainForSubproject()
 
     repositories {
         mavenLocal()
@@ -213,7 +210,6 @@ if (project.hasProperty("enableCodeStyle")) {
 }
 
 println("Using Kotlin compiler version: ${org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION}")
-filterSnapshotTests()
 
 subprojects {
     plugins.apply("org.jetbrains.dokka")
