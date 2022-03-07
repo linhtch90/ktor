@@ -53,7 +53,6 @@ buildscript {
     val kotlin_version: String by extra
     val atomicfu_version: String by extra
     val validator_version: String by extra
-    val android_gradle_version: String by extra
     val ktlint_version: String by extra
 
     dependencies {
@@ -61,7 +60,6 @@ buildscript {
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:$atomicfu_version")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
         classpath("org.jetbrains.kotlinx:binary-compatibility-validator:$validator_version")
-        classpath("com.android.tools.build:gradle:$android_gradle_version")
         classpath("org.jmailen.gradle:kotlinter-gradle:$ktlint_version")
     }
 

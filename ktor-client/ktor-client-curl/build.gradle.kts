@@ -52,7 +52,7 @@ kotlin {
                             val winTests = tasks.getByName("mingwX64Test") as KotlinNativeTest
                             winTests.environment(
                                 "PATH",
-                                "c:\\msys64\\mingw64\\bin;c:\\tools\\msys64\\mingw64\\bin;C:\\Tools\\msys2\\mingw64\\bin"
+                                "c:\\msys64\\mingw64\\bin;c:\\tools\\msys64\\mingw64\\bin;C:\\Tools\\msys2\\mingw64\\bin" // ktlint-disable max-line-length
                             )
                         }
                     }
