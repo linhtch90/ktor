@@ -18,14 +18,10 @@ fun Project.configureJsModules() {
         val kotlin_version: String by extra
         sourceSets {
             val jsMain by getting {
-                dependencies {
-                    api("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version")
-                }
             }
 
             val jsTest by getting {
                 dependencies {
-                    api("org.jetbrains.kotlin:kotlin-test-js:$kotlin_version")
                     api(npm("puppeteer", "*"))
                 }
             }

@@ -45,25 +45,17 @@ kotlin {
             }
             if (jdk > 7) {
                 api group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+                api(libs.kotlinx.coroutines.jdk8)
             }
 
             api(libs.slf4j.api)
         }
 
         jvmTest.dependencies {
-            api 'org.jetbrains.kotlin:kotlin-test'
-            api 'org.jetbrains.kotlin:kotlin-test-junit'
-
             api(libs.junit)
             api(libs.kotlin.test.junit)
             implementation(libs.kotlinx.coroutines.debug)
         }
-    }
-}
-
-dependencies {
-    if (jdk > 7) {
-        jvmMainApi(libs.kotlinx.coroutines.jdk8)
     }
 }
 
